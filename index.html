@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediBot AI - Your Personal Health Assistant</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMeaOvtUHTuWJSNRdrC8ZNdo_Oo/mte2mgCe6iFSIInUBO1P9" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body class="bg-gray-900 text-white font-sans antialiased">
+
+    <div id="app-wrapper">
+        <!-- Sidebar -->
+        <aside id="sidebar">
+            <div class="p-4">
+                <button id="new-chat-btn" class="w-full flex items-center justify-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+                    New Conversation
+                </button>
+            </div>
+            <nav id="chat-history-list" class="flex-grow overflow-y-auto px-2"></nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div id="content-wrapper">
+            <!-- Sidebar Toggle Button -->
+            <button id="sidebar-toggle" class="absolute top-4 left-4 z-20 text-gray-400 hover:text-white transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+
+            <main id="main-container" class="initial-layout">
+                <div id="background-overlay"></div>
+                
+                <div class="cloud-container">
+                    <svg viewBox="0 0 144 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M42.836 21.761c4.595-5.944 11.859-9.761 20.01-9.761 8.27 0 15.65 3.92 20.245 10.038 1.488-.34 3.038-.538 4.64-.538 11.545 0 20.914 9.37 20.914 20.915 0 2.94-2.384 5.324-5.324 5.324H23.324C12.78 47.739 4 38.96 4 28.415 4 18.45 12.01 10.44 21.966 10.44c3.96 0 7.632 1.25 10.74 3.39 4.348-5.35 10.74-8.006 17.63-8.006 1.378 0 2.72.107 4.026.312" fill="url(#cloud-gradient)" opacity="0.4"></path><defs><radialGradient id="cloud-gradient" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(72 24) rotate(90) scale(24)"><stop stop-color="#38bdf8"></stop><stop offset="1" stop-color="#38bdf8" stop-opacity="0"></stop></radialGradient></defs></svg>
+                </div>
+
+                <div id="intro-section" class="z-10 w-full max-w-4xl mx-auto flex flex-col items-center text-center">
+                    <div class="backdrop-blur-sm bg-white/10 border border-white/20 rounded-full px-4 py-1.5 text-sm mb-6">Introducing MediBot AI ✨</div>
+                    <h1 class="text-4xl md:text-6xl font-bold tracking-tight mb-4">Intelligent Health Insights, <span class="text-cyan-400">Instantly</span></h1>
+                    <p class="text-lg md:text-xl text-gray-300 max-w-2xl">Analyze symptoms, get recommendations, and chat about your health with our advanced AI powered by Llama-4-scout hosted on cerebras</p>
+                </div>
+
+                <div id="chat-container" class="z-10 w-full max-w-5xl flex-grow space-y-10"></div>
+
+                <div id="form-container" class="z-10 w-full max-w-5xl mt-12">
+                    <form id="chat-form" class="relative">
+                        <div class="relative flex flex-col bg-[#1e1e2f] border border-gray-600/50 rounded-2xl shadow-lg backdrop-blur-xl transition-all duration-300 p-2">
+                            <div id="file-preview-container" class="hidden p-3"></div>
+                            <div class="flex items-center p-1 px-4 py-6">
+                                <input type="file" id="file-input" class="hidden" accept="image/*"><button type="button" id="upload-btn" class="flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors" title="Upload Scan/Image"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg></button>
+                                <textarea id="message-input" rows="1" placeholder="Ask about any health problem or symptom..." class="flex-grow bg-transparent text-gray-200 placeholder-gray-500 focus:outline-none resize-none mx-2 text-lg"></textarea>
+                                <button id="send-btn" type="submit" class="flex-shrink-0 w-9 h-9 flex items-center justify-center bg-cyan-500 rounded-lg hover:bg-cyan-600 transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed" title="Send Message"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzYCcmTiGV8sXAUzOOdXstBO3NMmidDEftk" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+</body>
+</html>
